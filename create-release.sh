@@ -50,4 +50,4 @@ git push origin "v$VERSION"
 
 echo "Release v$VERSION created and pushed to GitHub."
 echo "GitHub Actions workflow will now build and publish the release."
-echo "Check the status at: https://github.com/ecoonline/jira-worklogger/actions"
+echo "Check the status at: https://github.com/liam-witterick/jira-worklogger/actions"
