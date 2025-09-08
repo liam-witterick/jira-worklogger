@@ -1,0 +1,74 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.19'
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        
+      - name: Get build date
+        id: build_date
+        run: echo "BUILD_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        
+      - name: Get commit hash
+        id: commit_hash
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      
+      - name: Set build flags
+        id: build_flags
+        run: echo "BUILD_FLAGS=-ldflags=\"-X 'main.Version=${{ env.VERSION }}' -X 'main.BuildDate=${{ env.BUILD_DATE }}' -X 'main.Commit=${{ env.COMMIT_HASH }}'\"" >> $GITHUB_ENV
+          
+      - name: Build for Linux
+        run: |
+          GOOS=linux GOARCH=amd64 go build ${{ env.BUILD_FLAGS }} -v -o jira-worklogger-linux-amd64
+          GOOS=linux GOARCH=arm64 go build ${{ env.BUILD_FLAGS }} -v -o jira-worklogger-linux-arm64
+      
+      - name: Build for macOS
+        run: |
+          GOOS=darwin GOARCH=amd64 go build ${{ env.BUILD_FLAGS }} -v -o jira-worklogger-macos-amd64
+          GOOS=darwin GOARCH=arm64 go build ${{ env.BUILD_FLAGS }} -v -o jira-worklogger-macos-arm64
+      
+      - name: Build for Windows
+        run: |
+          GOOS=windows GOARCH=amd64 go build ${{ env.BUILD_FLAGS }} -v -o jira-worklogger-windows-amd64.exe
+      
+      - name: Archive configuration and scripts
+        run: |
+          cp worklog_config.yaml worklog_config.yaml.example
+          chmod +x install.sh
+          tar -czvf jira-worklogger-${{ env.VERSION }}.tar.gz jira-worklogger-linux-amd64 jira-worklogger-linux-arm64 install.sh worklog_config.yaml.example
+          zip -r jira-worklogger-${{ env.VERSION }}.zip jira-worklogger-windows-amd64.exe jira-worklogger-macos-amd64 jira-worklogger-macos-arm64 install.sh worklog_config.yaml.example
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Jira Worklogger v${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            jira-worklogger-${{ env.VERSION }}.tar.gz
+            jira-worklogger-${{ env.VERSION }}.zip
+            jira-worklogger-linux-amd64
+            jira-worklogger-linux-arm64
+            jira-worklogger-macos-amd64
+            jira-worklogger-macos-arm64
+            jira-worklogger-windows-amd64.exe
+            worklog_config.yaml.example
+            install.sh

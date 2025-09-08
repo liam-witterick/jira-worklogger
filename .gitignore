@@ -1,0 +1,24 @@
+# Binaries
+jira-worklogger
+jira-worklogger-*
+__pycache__/
+*.exe
+
+# Config with sensitive data
+# Don't exclude the example config
+worklog_config.yaml
+!worklog_config.yaml.example
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temp files
+*.tmp
+*.bak
+
+# OS specific
+.DS_Store
+Thumbs.db

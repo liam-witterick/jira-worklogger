@@ -1,0 +1,17 @@
+# Minimal config for Jira Worklogger
+# You can also set env vars: JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN, TIMEZONE, JIRA_API_VERSION, LOG_LEVEL
+jira_base_url: "https://your-company.atlassian.net"
+jira_email: "your.email@example.com"
+jira_api_token: "YOUR_API_TOKEN"  # Get from https://id.atlassian.com/manage-profile/security/api-tokens
+timezone: "Europe/London"  # Your local timezone
+api_version: "3"  # Use "3" for Jira Cloud, "2" for Jira Server
+log_level: "info"  # Valid options: debug, info, warn, error
+
+defaults:
+  category_aliases:
+    meetings: "PROJ-123"    # General meetings
+    support: "PROJ-456"     # Support tasks
+    docs: "PROJ-789"        # Documentation
+    # Add your own aliases below:
+    # project1: "ABC-123"
+    # project2: "XYZ-456"
