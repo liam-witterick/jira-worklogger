@@ -49,7 +49,6 @@ jobs:
       
       - name: Archive configuration and scripts
         run: |
-          cp worklog_config.yaml worklog_config.yaml.example
           chmod +x install.sh
           tar -czvf jira-worklogger-${{ env.VERSION }}.tar.gz jira-worklogger-linux-amd64 jira-worklogger-linux-arm64 install.sh worklog_config.yaml.example
           zip -r jira-worklogger-${{ env.VERSION }}.zip jira-worklogger-windows-amd64.exe jira-worklogger-macos-amd64 jira-worklogger-macos-arm64 install.sh worklog_config.yaml.example
