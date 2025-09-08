@@ -21,7 +21,7 @@ Download the latest release from the [GitHub Releases page](https://github.com/l
 
 ```bash
 # Download the appropriate binary for your system
-curl -LO https://github.com/ecoonline/jira-worklogger/releases/download/v1.0.0/jira-worklogger-linux-amd64
+curl -LO https://github.com/liam-witterick/jira-worklogger/releases/download/v1.0.0/jira-worklogger-linux-amd64
 chmod +x jira-worklogger-linux-amd64
 
 # Option 1: Move to your bin directory
@@ -39,7 +39,7 @@ Download `jira-worklogger-windows-amd64.exe` from the releases page and rename i
 
 ```bash
 # Download the installation package
-curl -LO https://github.com/ecoonline/jira-worklogger/releases/download/v1.0.0/jira-worklogger-1.0.0.tar.gz
+curl -LO https://github.com/liam-witterick/jira-worklogger/releases/download/v1.0.0/jira-worklogger-1.0.0.tar.gz
 
 # Extract the package
 tar -xzvf jira-worklogger-1.0.0.tar.gz
@@ -53,7 +53,7 @@ tar -xzvf jira-worklogger-1.0.0.tar.gz
 If you prefer to build from source, you need Go 1.19 or later installed:
 
 ```bash
-git clone https://github.com/ecoonline/jira-worklogger.git
+git clone https://github.com/liam-witterick/jira-worklogger.git
 cd jira-worklogger
 go build
 ```

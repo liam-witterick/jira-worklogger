@@ -1,4 +1,4 @@
-module github.com/ecoonline/jira-worklogger
+module github.com/liam-witterick/jira-worklogger
 
 go 1.19
 
