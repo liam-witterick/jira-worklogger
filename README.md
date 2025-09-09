@@ -142,3 +142,24 @@ Time formats supported:
 ```
 jira-worklogger --help
 ```
+
+The tool supports the following command-line options:
+
+- `--help`, `-h`: Show help information
+- `--version`, `-v`: Show version information
+- `--date DATE`: Set the worklog date (format: YYYY-MM-DD, default: today)
+- `--entries ENTRIES`: Specify time entries directly (e.g., "meetings=1h;support=30m")
+
+#### Non-interactive Mode
+
+You can run jira-worklogger in non-interactive mode by providing the `--entries` parameter:
+
+```bash
+# Log time for today
+jira-worklogger --entries "meetings=1h;support=30m;PROJ-123=45m"
+
+# Log time for a specific date
+jira-worklogger --date "2025-09-08" --entries "meetings=2h;docs=1h30m"
+```
+
+This is useful for when you want to quickly log time without going through the interactive prompts.

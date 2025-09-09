@@ -15,8 +15,11 @@ Jira Worklogger v%s - Command-line tool for posting worklogs to Jira Cloud/Serve
 Usage: jira-worklogger [options]
 
 Options:
-  --help, -h     Show this help message and exit
-  --version, -v  Show version information and exit
+  --help, -h             Show this help message and exit
+  --version, -v          Show version information and exit
+  --date DATE            Set the worklog date (format: YYYY-MM-DD, default: today)
+  --entries ENTRIES      Specify time entries directly (e.g., "meetings=1h;support=30m")
+                        Skips the interactive prompt when provided
 
 Configuration:
   The tool looks for configuration in the following locations:
@@ -112,6 +115,12 @@ func promptUser(settings *Settings, epics map[string]Epic) (map[string]string, e
 }
 
 func main() {
+	// Initialize command line options
+	cmdLineOptions := map[string]string{
+		"date":    "",
+		"entries": "",
+	}
+
 	// Check for help flag
 	if len(os.Args) > 1 && (os.Args[1] == "--help" || os.Args[1] == "-h") {
 		showHelp()
@@ -124,6 +133,31 @@ func main() {
 		fmt.Printf("Build date: %s\n", BuildDate)
 		fmt.Printf("Commit: %s\n", Commit)
 		return
+	}
+
+	// Parse command line arguments
+	for i := 1; i < len(os.Args); i++ {
+		arg := os.Args[i]
+		if strings.HasPrefix(arg, "--") {
+			key := strings.TrimPrefix(arg, "--")
+			
+			// Skip to next argument if this is the last one or next is another flag
+			if i+1 >= len(os.Args) || strings.HasPrefix(os.Args[i+1], "--") {
+				fmt.Printf("[error] No value provided for flag %s\n", arg)
+				os.Exit(1)
+			}
+			
+			// Get the value
+			value := os.Args[i+1]
+			i++ // Skip the next argument as it's a value
+			
+			// Store the value
+			if _, exists := cmdLineOptions[key]; exists {
+				cmdLineOptions[key] = value
+			} else {
+				fmt.Printf("[warn] Unknown flag: %s\n", arg)
+			}
+		}
 	}
 
 	// Load settings
@@ -152,11 +186,24 @@ func main() {
 		epics = GetEpicsFromIssues(issues)
 	}
 
-	// Prompt user for input
-	userInput, err := promptUser(settings, epics)
-	if err != nil {
-		logger.Error("Failed to get user input: %v", err)
-		os.Exit(1)
+	// Prepare user input (either from command-line or interactive prompts)
+	var userInput map[string]string
+	
+	// Check if we have command-line parameters for non-interactive mode
+	if cmdLineOptions["entries"] != "" {
+		// Non-interactive mode
+		userInput = map[string]string{
+			"date":    cmdLineOptions["date"],
+			"entries": cmdLineOptions["entries"],
+		}
+		logger.Info("Running in non-interactive mode with provided parameters")
+	} else {
+		// Interactive mode - prompt user for input
+		userInput, err = promptUser(settings, epics)
+		if err != nil {
+			logger.Error("Failed to get user input: %v", err)
+			os.Exit(1)
+		}
 	}
 
 	// Parse date and create ISO timestamp
