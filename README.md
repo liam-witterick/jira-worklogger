@@ -21,7 +21,7 @@ Download the latest release from the [GitHub Releases page](https://github.com/l
 
 ```bash
 # Download the appropriate binary for your system
-curl -LO https://github.com/liam-witterick/jira-worklogger/releases/download/v1.0.0/jira-worklogger-linux-amd64
+curl -LO https://github.com/liam-witterick/jira-worklogger/releases/download/v0.3.0/jira-worklogger-linux-amd64
 chmod +x jira-worklogger-linux-amd64
 
 # Option 1: Move to your bin directory
